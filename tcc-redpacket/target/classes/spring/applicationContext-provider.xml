@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="tcc-redpacket" />
+
+	<!-- <context:property-placeholder location="classpath:sample-dubbo-capital.properties" ignore-unresolvable="true" /> -->
+
+	<!--<dubbo:registry id="capitalRpcZk" address="multicast://224.5.6.7:1234?unicast=false"/> -->
+	<dubbo:registry id="redPacket" protocol="zookeeper" register="true" subscribe="false" address="192.168.1.198:2181" session="180000" timeout="30000"
+		file="./.dubbo/rpc-cache" />
+
+	<dubbo:protocol name="dubbo" port="20880" payload="52428800" />
+
+	<dubbo:service interface="com.th.service.RedPacketService" registry="redPacket" ref="redPacketServiceImpl" timeout="60000" retries="0" />
+
+</beans>

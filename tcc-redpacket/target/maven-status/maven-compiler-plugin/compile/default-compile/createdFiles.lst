@@ -1,0 +1,3 @@
+com\th\dao\RedPacketDao.class
+com\th\service\impl\RedPacketServiceImpl.class
+com\th\controller\RedPacketController.class

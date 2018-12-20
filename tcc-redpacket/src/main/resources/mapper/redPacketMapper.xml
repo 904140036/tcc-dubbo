@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 路径 指向dao层接口 -->
+<mapper namespace="com.th.dao.RedPacketDao">
+
+	<insert id="insert" parameterType="com.th.entity.RedPacket">
+		INSERT INTO red_packet(id,orderId,num,status) values(#{id},#{orderId},#{num},#{status})
+	</insert>
+
+	<update id="update" parameterType="com.th.entity.RedPacket">
+		UPDATE red_packet SET STATUS = #{status} WHERE id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="com.th.entity.RedPacket">
+		DELETE FROM red_packet WHERE id = #{id}
+	</delete>
+
+</mapper>

@@ -1,0 +1,5 @@
+com\th\entity\Order.class
+com\th\service\RedPacketService.class
+com\th\entity\RedPacket.class
+com\th\service\OrderService.class
+com\th\service\CapitalService.class

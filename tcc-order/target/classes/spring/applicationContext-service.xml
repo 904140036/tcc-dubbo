@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util" xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<!-- TCC Transaction -->
+	<import resource="classpath:tcc-transaction.xml" />
+	<import resource="classpath:tcc-transaction-dubbo.xml" />
+
+
+	<!-- 配置包扫描器，扫描所有带@Service注解的类 -->
+	<context:component-scan base-package="com.th.service" />
+
+
+	<!-- 引用dubbo服务 <dubbo:application name="taotao-manager-web" /> <dubbo:registry protocol="zookeeper" address="192.168.1.117:2181" /> <dubbo:reference interface="com.taotao.service.ItemService" id="itemService" 
+		/> -->
+
+	<!-- 引用dubbo服务/> -->
+	<dubbo:application name="tcc-order" />
+	<dubbo:registry protocol="zookeeper" address="192.168.1.198:2181" />
+	<dubbo:reference interface="com.th.service.RedPacketService" id="redPacketService" />
+
+
+	<!--tcc -->
+	<bean id="tccDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<property name="url" value="${tccjdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="maxActive" value="10" />
+		<property name="minIdle" value="5" />
+	</bean>
+
+	<bean id="transactionRepository" class="org.mengyun.tcctransaction.spring.repository.SpringJdbcTransactionRepository">
+		<property name="dataSource" ref="tccDataSource" />
+		<property name="domain" value="Order" />
+		<property name="tbSuffix" value="_ASSET" />
+	</bean>
+
+	<bean class="org.mengyun.tcctransaction.spring.recover.DefaultRecoverConfig">
+		<property name="maxRetryCount" value="30" />
+		<property name="recoverDuration" value="120" />
+		<property name="cronExpression" value="0 */1 * * * ?" />
+		<property name="delayCancelExceptions">
+			<util:set>
+				<value>com.alibaba.dubbo.remoting.TimeoutException</value>
+			</util:set>
+		</property>
+	</bean>
+
+
+
+</beans>

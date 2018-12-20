@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 路径 指向dao层接口 -->
+<mapper namespace="com.th.dao.OrderDao">
+
+	<insert id="insert" parameterType="com.th.entity.Order">
+		INSERT INTO t_order(orderId,name,status) values(#{orderId},#{name},#{status})
+	</insert>
+
+	<update id="update" parameterType="com.th.entity.Order">
+		UPDATE t_order SET status = #{status} WHERE orderId = #{orderId}
+	</update>
+
+
+	<delete id="delete" parameterType="com.th.entity.Order">
+		DELETE FROM t_order WHERE orderId = #{orderId}
+	</delete>
+
+</mapper>
